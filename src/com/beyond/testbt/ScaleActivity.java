@@ -78,6 +78,10 @@ public class ScaleActivity extends Activity {
 	private Button button_back = null;
 	private Button button_read = null;
 	
+	private static String DONOTHING = "N"; //do nothing 
+	private String fontOrBack = DONOTHING; //N表示在前进和后退方向上没有作任何操作
+	private String leftOrRight = DONOTHING; //N表示在左右方向上没有作任何操作
+	
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -112,56 +116,78 @@ public class ScaleActivity extends Activity {
 			return;
 		}
 		
-		
+		/**
+		 * click "向前" button
+		 * */
 		this.button_up.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Toast.makeText(getApplicationContext(), "up", Toast.LENGTH_LONG).show();
+				Toast.makeText(getApplicationContext(), "font", Toast.LENGTH_LONG).show();
 				if (null != bluetoothService) {
-					bluetoothService.write(StringHexUtils.hexStr2Bytes(StringHexUtils.encode("F")));  
+					fontOrBack = "F";
+					String opt = fontOrBack.trim()+DONOTHING;
+					bluetoothService.write(StringHexUtils.hexStr2Bytes(StringHexUtils.encode(opt.trim())));  
 				}
 			}
 		});
+		/**
+		 * click "停止" button
+		 * */
 		this.button_stop.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Toast.makeText(getApplicationContext(), "stop", Toast.LENGTH_LONG).show();
 				if (null != bluetoothService) {
-					bluetoothService.write(StringHexUtils.hexStr2Bytes(StringHexUtils.encode("S")));  
+					fontOrBack = "S";
+					leftOrRight = "S";
+					String opt = fontOrBack.trim()+leftOrRight.trim();
+					bluetoothService.write(StringHexUtils.hexStr2Bytes(StringHexUtils.encode(opt.trim()))); 
 				}
 				
 			}
 		});
+		/**
+		 * click "向左" button
+		 * */
 		this.button_left.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 			    Toast.makeText(getApplicationContext(), "left", Toast.LENGTH_LONG).show();
 				if (null != bluetoothService) {
-					bluetoothService.write(StringHexUtils.hexStr2Bytes(StringHexUtils.encode("L")));  
+					leftOrRight = "L";
+					String opt = fontOrBack.trim()+leftOrRight.trim();
+					bluetoothService.write(StringHexUtils.hexStr2Bytes(StringHexUtils.encode(opt.trim())));   
 				}
 			}
 		});
+		/**
+		 * click "向右" button
+		 * */
 		this.button_right.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_LONG).show();
 				if (null != bluetoothService) {
-					bluetoothService.write(StringHexUtils.hexStr2Bytes(StringHexUtils.encode("R")));  
+					leftOrRight = "R";
+					String opt = fontOrBack.trim()+leftOrRight.trim();
+					bluetoothService.write(StringHexUtils.hexStr2Bytes(StringHexUtils.encode(opt.trim())));    
 				}
 			}
 		});
-		
+		 
 		this.button_back.setOnClickListener(new OnClickListener() {
 			
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Toast.makeText(getApplicationContext(), "back", Toast.LENGTH_LONG).show();
 				if (null != bluetoothService) {
-					bluetoothService.write(StringHexUtils.hexStr2Bytes(StringHexUtils.encode("B")));  
+					fontOrBack = "B";
+					String opt = fontOrBack.trim()+DONOTHING;
+					bluetoothService.write(StringHexUtils.hexStr2Bytes(StringHexUtils.encode(opt.trim())));    
 				}
 			}
 		});
