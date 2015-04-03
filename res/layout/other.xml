@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+ 
+    <ListView android:id="@+id/in"
+        android:layout_width="fill_parent"
+        android:layout_height="300px"
+        android:transcriptMode="alwaysScroll"
+    />
+    <!--  -->
+    <Button android:id="@+id/buttton_UP"
+    	android:layout_width="fill_parent" 
+    	android:layout_height="100px"
+    	android:text="前进"   
+    />
+    <Button android:id="@+id/buttton_LEFT"
+    	android:layout_width="fill_parent" 
+    	android:layout_height="100px"
+    	android:text="向左"   
+    />
+   <Button android:id="@+id/buttton_RIGHT"
+    	android:layout_width="fill_parent" 
+    	android:layout_height="100px"
+    	android:text="向右"   
+    />
+   <Button android:id="@+id/buttton_BACK"
+    	android:layout_width="fill_parent" 
+    	android:layout_height="100px"
+    	android:text="后退"   
+    />
+    <Button android:id="@+id/buttton_STOP"
+    	android:layout_width="fill_parent" 
+    	android:layout_height="100px"
+    	android:text="停止"   
+    />
+    <Button android:id="@+id/buttton_Read"
+    	android:layout_width="fill_parent" 
+    	android:layout_height="100px"
+    	android:text="接受Arduino发来的数据"   
+    />
+    
+</LinearLayout>
