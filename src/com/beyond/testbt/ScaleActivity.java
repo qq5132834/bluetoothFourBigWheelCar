@@ -33,6 +33,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -76,12 +78,12 @@ public class ScaleActivity extends Activity {
 	private Button button_left = null;
 	private Button button_right = null;
 	private Button button_back = null;
-	private Button button_read = null;
+	private RadioGroup radio_speed = null;//速度选择
 	
 	private static String DONOTHING = "N"; //do nothing 
 	private String fontOrBack = DONOTHING; //N表示在前进和后退方向上没有作任何操作
 	private String leftOrRight = DONOTHING; //N表示在左右方向上没有作任何操作
-	
+	private String speed = "M";
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -104,7 +106,7 @@ public class ScaleActivity extends Activity {
 		this.button_left = (Button) this.findViewById(R.id.buttton_LEFT);
 		this.button_right = (Button) this.findViewById(R.id.buttton_RIGHT);
 		this.button_back = (Button) this.findViewById(R.id.buttton_BACK);
-		this.button_read = (Button) this.findViewById(R.id.buttton_Read);
+		this.radio_speed = (RadioGroup) this.findViewById(R.id.car_speed);
 		
 		// Get local Bluetooth adapter
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
@@ -125,8 +127,22 @@ public class ScaleActivity extends Activity {
 				// TODO Auto-generated method stub
 				Toast.makeText(getApplicationContext(), "font", Toast.LENGTH_LONG).show();
 				if (null != bluetoothService) {
+					
+					//获取速度
+					RadioButton radioButton =  (RadioButton) findViewById(radio_speed.getCheckedRadioButtonId());
+					String radioText = radioButton.getText().toString();
+					if(radioText.indexOf("低")!=-1){
+						speed = "L";
+					}else if(radioText.indexOf("中")!=-1){
+						speed = "M";
+					}else if(radioText.indexOf("高")!=-1){
+						speed = "H";
+					}
+					
+					
+					
 					fontOrBack = "F";
-					String opt = fontOrBack.trim()+DONOTHING;
+					String opt = fontOrBack.trim()+DONOTHING+speed;
 					bluetoothService.write(StringHexUtils.hexStr2Bytes(StringHexUtils.encode(opt.trim())));  
 				}
 			}
@@ -140,9 +156,21 @@ public class ScaleActivity extends Activity {
 				// TODO Auto-generated method stub
 				Toast.makeText(getApplicationContext(), "stop", Toast.LENGTH_LONG).show();
 				if (null != bluetoothService) {
+					
+					//获取速度
+					RadioButton radioButton =  (RadioButton) findViewById(radio_speed.getCheckedRadioButtonId());
+					String radioText = radioButton.getText().toString();
+					if(radioText.indexOf("低")!=-1){
+						speed = "L";
+					}else if(radioText.indexOf("中")!=-1){
+						speed = "M";
+					}else if(radioText.indexOf("高")!=-1){
+						speed = "H";
+					}
+					
 					fontOrBack = "S";
 					leftOrRight = "S";
-					String opt = fontOrBack.trim()+leftOrRight.trim();
+					String opt = fontOrBack.trim()+leftOrRight.trim()+speed;
 					bluetoothService.write(StringHexUtils.hexStr2Bytes(StringHexUtils.encode(opt.trim()))); 
 				}
 				
@@ -157,8 +185,20 @@ public class ScaleActivity extends Activity {
 				// TODO Auto-generated method stub
 			    Toast.makeText(getApplicationContext(), "left", Toast.LENGTH_LONG).show();
 				if (null != bluetoothService) {
+					
+					//获取速度
+					RadioButton radioButton =  (RadioButton) findViewById(radio_speed.getCheckedRadioButtonId());
+					String radioText = radioButton.getText().toString();
+					if(radioText.indexOf("低")!=-1){
+						speed = "L";
+					}else if(radioText.indexOf("中")!=-1){
+						speed = "M";
+					}else if(radioText.indexOf("高")!=-1){
+						speed = "H";
+					}
+					
 					leftOrRight = "L";
-					String opt = fontOrBack.trim()+leftOrRight.trim();
+					String opt = fontOrBack.trim()+leftOrRight.trim()+speed;
 					bluetoothService.write(StringHexUtils.hexStr2Bytes(StringHexUtils.encode(opt.trim())));   
 				}
 			}
@@ -172,8 +212,20 @@ public class ScaleActivity extends Activity {
 				// TODO Auto-generated method stub
 				Toast.makeText(getApplicationContext(), "right", Toast.LENGTH_LONG).show();
 				if (null != bluetoothService) {
+					
+					//获取速度
+					RadioButton radioButton =  (RadioButton) findViewById(radio_speed.getCheckedRadioButtonId());
+					String radioText = radioButton.getText().toString();
+					if(radioText.indexOf("低")!=-1){
+						speed = "L";
+					}else if(radioText.indexOf("中")!=-1){
+						speed = "M";
+					}else if(radioText.indexOf("高")!=-1){
+						speed = "H";
+					}
+					
 					leftOrRight = "R";
-					String opt = fontOrBack.trim()+leftOrRight.trim();
+					String opt = fontOrBack.trim()+leftOrRight.trim()+speed;
 					bluetoothService.write(StringHexUtils.hexStr2Bytes(StringHexUtils.encode(opt.trim())));    
 				}
 			}
@@ -185,24 +237,26 @@ public class ScaleActivity extends Activity {
 				// TODO Auto-generated method stub
 				Toast.makeText(getApplicationContext(), "back", Toast.LENGTH_LONG).show();
 				if (null != bluetoothService) {
+					
+					//获取速度
+					RadioButton radioButton =  (RadioButton) findViewById(radio_speed.getCheckedRadioButtonId());
+					String radioText = radioButton.getText().toString();
+					if(radioText.indexOf("低")!=-1){
+						speed = "L";
+					}else if(radioText.indexOf("中")!=-1){
+						speed = "M";
+					}else if(radioText.indexOf("高")!=-1){
+						speed = "H";
+					}
+					
 					fontOrBack = "B";
-					String opt = fontOrBack.trim()+DONOTHING;
+					String opt = fontOrBack.trim()+DONOTHING+speed;
 					bluetoothService.write(StringHexUtils.hexStr2Bytes(StringHexUtils.encode(opt.trim())));    
 				}
 			}
 		});
 		
-		this.button_read.setOnClickListener(new OnClickListener() {
-			
-			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				Toast.makeText(getApplicationContext(), "read", Toast.LENGTH_LONG).show();
-				if (null != bluetoothService) {
-					bluetoothService.write(StringHexUtils.hexStr2Bytes(StringHexUtils.encode("A")));  
-				}
-			}
-		});
-		
+	 
 	}
 
  
