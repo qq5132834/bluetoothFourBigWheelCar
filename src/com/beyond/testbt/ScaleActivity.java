@@ -2,11 +2,14 @@
 package com.beyond.testbt;
 
  
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.Locale;
 
 import android.app.Activity;
+import android.app.Service;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Context;
@@ -18,10 +21,16 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.location.LocationProvider;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Vibrator;
 import android.provider.Settings;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -37,6 +46,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.speech.tts.TextToSpeech.OnInitListener; 
 
 public class ScaleActivity extends Activity {
 	// Debugging
@@ -84,6 +94,10 @@ public class ScaleActivity extends Activity {
 	private String fontOrBack = DONOTHING; //N表示在前进和后退方向上没有作任何操作
 	private String leftOrRight = DONOTHING; //N表示在左右方向上没有作任何操作
 	private String speed = "M";
+	
+	private Vibrator vibrator=null;  //手机震动服务
+    private TextToSpeech mSpeech;    //播放语音
+    
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -108,6 +122,23 @@ public class ScaleActivity extends Activity {
 		this.button_back = (Button) this.findViewById(R.id.buttton_BACK);
 		this.radio_speed = (RadioGroup) this.findViewById(R.id.car_speed);
 		
+		this.vibrator=(Vibrator)getSystemService(Service.VIBRATOR_SERVICE);
+		this.mSpeech = new TextToSpeech(this, new OnInitListener() {
+			
+			public void onInit(int status) {
+				// TODO Auto-generated method stub
+				if(status==TextToSpeech.SUCCESS) 
+	            { 
+	                int result=mSpeech.setLanguage(Locale.ENGLISH); 
+	                if(result!=TextToSpeech.LANG_AVAILABLE) 
+	                { 
+	                    Toast.makeText(ScaleActivity.this, "TTS暂时不支持这种语言的朗读。", 50000).show(); 
+	                } 
+	            } 
+			}
+		});
+		
+		
 		// Get local Bluetooth adapter
 		mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
 
@@ -127,6 +158,7 @@ public class ScaleActivity extends Activity {
 				// TODO Auto-generated method stub
 				Toast.makeText(getApplicationContext(), "font", Toast.LENGTH_LONG).show();
 				if (null != bluetoothService) {
+				
 					
 					//获取速度
 					RadioButton radioButton =  (RadioButton) findViewById(radio_speed.getCheckedRadioButtonId());
@@ -138,9 +170,6 @@ public class ScaleActivity extends Activity {
 					}else if(radioText.indexOf("高")!=-1){
 						speed = "H";
 					}
-					
-					
-					
 					fontOrBack = "F";
 					String opt = fontOrBack.trim()+DONOTHING+speed;
 					bluetoothService.write(StringHexUtils.hexStr2Bytes(StringHexUtils.encode(opt.trim())));  
@@ -372,7 +401,13 @@ public class ScaleActivity extends Activity {
 					byte[] readBuf = (byte[]) msg.obj;
 					String str = new String(readBuf);//当接受到的byte[]转为字符串
 					Log.i("从arduino接受到的数据", str); 	 
-						mConversationArrayAdapter.add("received:  " + str);				
+					mConversationArrayAdapter.add("received:  " + str);		
+					
+					//如果从小车返回给手机返回Error数据，说明小车已经遇到障碍，需要紧急避障。采取的方式就是震动手机和提示避障语音
+					if(str.indexOf("E")!=-1){
+						mSpeech.speak("attention ", TextToSpeech.QUEUE_ADD, null); 
+						vibrator.vibrate(800);
+					}
 				}
 				
 				break;
