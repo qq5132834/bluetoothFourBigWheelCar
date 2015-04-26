@@ -405,8 +405,11 @@ public class ScaleActivity extends Activity {
 					
 					//如果从小车返回给手机返回Error数据，说明小车已经遇到障碍，需要紧急避障。采取的方式就是震动手机和提示避障语音
 					if(str.indexOf("E")!=-1){
-						mSpeech.speak("attention ", TextToSpeech.QUEUE_ADD, null); 
+						if(!mSpeech.isSpeaking()){
+							mSpeech.speak("attention ", TextToSpeech.QUEUE_ADD, null); 
+						}
 						vibrator.vibrate(800);
+						
 					}
 				}
 				
